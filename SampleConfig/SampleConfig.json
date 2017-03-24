@@ -1,0 +1,28 @@
+//Sample Simple Config Object
+//{
+//  "Name": "Sample Name",
+//  "Age": "10"
+//}
+
+//Sample Complex Config Object
+{
+  "SampleSimpleConfigs": [
+    {
+      "Age": 10,
+      "Name": "ComplexNameInList1"
+    },
+    {
+      "Age": 11,
+      "Name": "ComplexNameInList2"
+    },
+    {
+      "Age": 10,
+      "Name": "ComplexNameInList3"
+    }
+  ],
+  "SampleSimpleConfig": {
+    "Age": 10,
+    "Name": "ComplexNameSingle"
+  },
+  "Version": "1.0"
+}
