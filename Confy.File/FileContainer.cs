@@ -4,7 +4,8 @@ using Confy.File.FluentBuilder.Interfaces;
 
 namespace Confy.File
 {
-    public class FileContainer<T> : IFileContainer<T>, IFilePath<T>, IParsingOptions<T>, IGetFileConfiguration<T>, IRefreshOptions<T>, IRefreshMode<T>, IRefreshTimingAutomaticOptions<T>, IRefreshTimingLastUpdateOptions<T>
+    [Serializable]
+    public class FileContainer<T> : IFileContainer<T>, IFilePath<T>, IParsingOptions<T>, IGetFileConfiguration<T>, IRefreshOptions<T>, IRefreshMode<T>, IRefreshTimingAutomaticOptions<T>
     {
         public T Configuration { get; set; }
         private string _filePath;
@@ -37,7 +38,7 @@ namespace Confy.File
             return this;
         }
 
-        public IRefreshMode<T> Using()
+        public IRefreshMode<T> UsingRefreshMode()
         {
             return this;
         }
@@ -48,13 +49,7 @@ namespace Confy.File
             return this;
         }
 
-        public IRefreshTimingLastUpdateOptions<T> UsingLastUpdate()
-        {
-            _refreshType = RefreshType.UsingLastUpdateTimeInFile;
-            return this;
-        }
-
-        public IGetFileConfiguration<T> ReloadingEachMode(TimeSpan interval)
+        public IGetFileConfiguration<T> Each(TimeSpan interval)
         {
             _refreshInterval = interval;
             return this;
@@ -62,14 +57,14 @@ namespace Confy.File
 
         public IGetFileConfiguration<T> LookingAtFileEachMode(TimeSpan interval)
         {
+            _refreshType = RefreshType.UsingLastUpdateTimeInFile;
             _refreshInterval = interval;
-            _lastRefresh = DateTime.Now;
+            _lastRefresh = DateTime.UtcNow;
             return this;
         }
 
         public IFileContainer<T> Build()
         {
-            IFileContainer<T> container = new FileContainer<T>();
             LoadConfiguration();
             ActivateReloaderDaemon();
             return this;
@@ -106,7 +101,7 @@ namespace Confy.File
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
         }
 
         private void StartAutomaticReloader()

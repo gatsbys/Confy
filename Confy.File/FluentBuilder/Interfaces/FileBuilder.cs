@@ -6,7 +6,7 @@ namespace Confy.File.FluentBuilder.Interfaces
     {
         IFileContainer<T> Build();
     }
-    
+
     public interface IFilePath<T>
     {
         IParsingOptions<T> LocatedAt(string path);
@@ -21,29 +21,23 @@ namespace Confy.File.FluentBuilder.Interfaces
     public interface IRefreshOptions<T>
     {
         IGetFileConfiguration<T> NoRefresh();
-        IRefreshMode<T> Using();
+        IRefreshMode<T> UsingRefreshMode();
     }
 
     public interface IRefreshTimingAutomaticOptions<T>
     {
-        IGetFileConfiguration<T> ReloadingEachMode(TimeSpan interval);
+        IGetFileConfiguration<T> Each(TimeSpan interval);
     }
-
-    public interface IRefreshTimingLastUpdateOptions<T>
-    {
-        IGetFileConfiguration<T> LookingAtFileEachMode(TimeSpan interval);
-    }
-
     public interface IRefreshMode<T>
     {
         IRefreshTimingAutomaticOptions<T> Automatic();
-        IRefreshTimingLastUpdateOptions<T> UsingLastUpdate();
+        IGetFileConfiguration<T> LookingAtFileEachMode(TimeSpan interval);
 
     }
 
     public enum RefreshType
     {
-        NotDefined=0,
+        NotDefined = 0,
         Automatic = 1,
         UsingLastUpdateTimeInFile = 2,
         NoRefresh = 3

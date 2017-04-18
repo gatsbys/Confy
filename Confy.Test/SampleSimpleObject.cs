@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Confy.Test
 {
+    [Serializable]
     public class SampleSimpleObject
     {
         public string Name { get; set; }
