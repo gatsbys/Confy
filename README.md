@@ -17,7 +17,14 @@ The Nuget is available at :
 ## Example Quick Usage
 
 ```csharp
-
+ var container =
+                FileContainerBuilder.BuildContainer<ComplexSampleObject>()
+                    .LocatedAt(_path + @"\Config_ComplexSectionConfig.json")
+                    .UsingSection("NO-SAMPLE")
+                    .UsingRefreshMode()
+                    .Automatic()
+                    .Each(TimeSpan.FromSeconds(2))
+                    .Build();
 ```
 
 
