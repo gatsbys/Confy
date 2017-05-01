@@ -1,18 +1,33 @@
 ﻿using System;
 using System.Threading;
 using Confy.File.FluentBuilder.Interfaces;
+using System.IO;
 
 namespace Confy.File
 {
     [Serializable]
-    public class FileContainer<T> : IFileContainer<T>, IFilePath<T>, IParsingOptions<T>, IGetFileConfiguration<T>, IRefreshOptions<T>, IRefreshMode<T>, IRefreshTimingAutomaticOptions<T>
+    public class FileContainer<T> : IFileContainer<T>, IFilePath<T>, IParsingOptions<T>, IGetFileConfiguration<T>, IRefreshOptions<T> where T : new()
     {
-        public T Configuration { get; set; }
+        private T _configuration = new T();
+        public T Configuration
+        {
+            get
+            {
+                while (_refreshing)
+                {
+                }
+                return _configuration;
+            }
+            set
+            {
+                _configuration = value;
+            }
+        }
         private string _filePath;
         private string _section;
-        private DateTime _lastRefresh;
-        private TimeSpan _refreshInterval;
-        private RefreshType _refreshType;
+        private bool _refreshMode = false;
+        private object _lock = new object();
+        private bool _refreshing = false;
         private delegate void ReloaderDelegate();
         public IParsingOptions<T> LocatedAt(string path)
         {
@@ -34,32 +49,6 @@ namespace Confy.File
 
         public IGetFileConfiguration<T> NoRefresh()
         {
-            _refreshType = RefreshType.NoRefresh;
-            return this;
-        }
-
-        public IRefreshMode<T> UsingRefreshMode()
-        {
-            return this;
-        }
-
-        public IRefreshTimingAutomaticOptions<T> Automatic()
-        {
-            _refreshType = RefreshType.Automatic;
-            return this;
-        }
-
-        public IGetFileConfiguration<T> Each(TimeSpan interval)
-        {
-            _refreshInterval = interval;
-            return this;
-        }
-
-        public IGetFileConfiguration<T> LookingAtFileEachMode(TimeSpan interval)
-        {
-            _refreshType = RefreshType.UsingLastUpdateTimeInFile;
-            _refreshInterval = interval;
-            _lastRefresh = DateTime.UtcNow;
             return this;
         }
 
@@ -72,71 +61,68 @@ namespace Confy.File
 
         private void LoadConfiguration()
         {
+            _refreshing = true;
             if (_section == string.Empty)
             {
-                Configuration = Json.JsonLoader.ConvertFromJson<T>(_filePath);
+                _configuration = Json.JsonLoader.ConvertFromJson<T>(_filePath);
             }
             else if (_section != string.Empty)
             {
-                Configuration = Json.JsonLoader.ConvertFromJson<T>(_filePath, _section);
+                _configuration = Json.JsonLoader.ConvertFromJson<T>(_filePath, _section);
             }
-        }
-
-        private void ActivateReloaderDaemon()
-        {
-            switch (_refreshType)
-            {
-                case RefreshType.NotDefined:
-                    throw new Exception("Undefined refresh type");
-                case RefreshType.Automatic:
-                    var reloadDelegate = new ReloaderDelegate(StartAutomaticReloader);
-                    reloadDelegate.BeginInvoke(ReloaderCallback, reloadDelegate);
-                    break;
-                case RefreshType.UsingLastUpdateTimeInFile:
-                    var reloadDelegateFBased = new ReloaderDelegate(StartLastUpdateFileBasedReloader);
-                    reloadDelegateFBased.BeginInvoke(ReloaderCallback, reloadDelegateFBased);
-                    break;
-                case RefreshType.NoRefresh:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-        }
-
-        private void StartAutomaticReloader()
-        {
-            while (true)
-            {
-                LoadConfiguration();
-                Thread.Sleep((int)_refreshInterval.TotalMilliseconds);
-            }
-        }
-
-        private void StartLastUpdateFileBasedReloader()
-        {
-            while (true)
-            {
-                var currWriteDate = IO.IOHelper.GetLastWriteDateUtc(_filePath);
-                if (currWriteDate > _lastRefresh)
-                {
-                    LoadConfiguration();
-                    _lastRefresh = currWriteDate;
-                }
-                Thread.Sleep((int)_refreshInterval.TotalMilliseconds);
-            }
-        }
-
-        private void ReloaderCallback(IAsyncResult ar)
-        {
-            try
-            {
-                var caller = (ReloaderDelegate)ar.AsyncState;
-                caller.EndInvoke(ar);
-            }
-            catch (Exception)
-            { }
-        }
-
+            _refreshing = false;
     }
+
+    private void ActivateReloaderDaemon()
+    {
+        if (_refreshMode)
+        {
+            SetWatcher();
+            var reloadDelegateFBased = new ReloaderDelegate(StartLastUpdateFileBasedReloader);
+            reloadDelegateFBased.BeginInvoke(ReloaderCallback, reloadDelegateFBased);
+        }
+    }
+    private void StartLastUpdateFileBasedReloader()
+    {
+        while (true)
+        {
+        }
+    }
+    private void ReloaderCallback(IAsyncResult ar)
+    {
+        try
+        {
+            var caller = (ReloaderDelegate)ar.AsyncState;
+            caller.EndInvoke(ar);
+        }
+        catch (Exception)
+        { }
+    }
+    private void SetWatcher()
+    {
+        FileSystemWatcher watcher = new FileSystemWatcher();
+        var path = Path.GetDirectoryName(_filePath);
+        var file = Path.GetFileName(_filePath);
+        watcher.Path = path;
+        /* Watch for changes in LastAccess and LastWrite times, and 
+           the renaming of files or directories. */
+        watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+           | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+        watcher.Filter = file;
+        // Add event handlers.
+        watcher.Changed += new FileSystemEventHandler(OnChanged);
+        // Begin watching.
+        watcher.EnableRaisingEvents = true;
+    }
+    private void OnChanged(object source, FileSystemEventArgs e)
+    {
+        LoadConfiguration();
+    }
+
+    public IGetFileConfiguration<T> WhenFileChange()
+    {
+        _refreshMode = true;
+        return this;
+    }
+}
 }

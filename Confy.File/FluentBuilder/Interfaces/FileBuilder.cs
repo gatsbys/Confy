@@ -21,25 +21,6 @@ namespace Confy.File.FluentBuilder.Interfaces
     public interface IRefreshOptions<T>
     {
         IGetFileConfiguration<T> NoRefresh();
-        IRefreshMode<T> UsingRefreshMode();
-    }
-
-    public interface IRefreshTimingAutomaticOptions<T>
-    {
-        IGetFileConfiguration<T> Each(TimeSpan interval);
-    }
-    public interface IRefreshMode<T>
-    {
-        IRefreshTimingAutomaticOptions<T> Automatic();
-        IGetFileConfiguration<T> LookingAtFileEachMode(TimeSpan interval);
-
-    }
-
-    public enum RefreshType
-    {
-        NotDefined = 0,
-        Automatic = 1,
-        UsingLastUpdateTimeInFile = 2,
-        NoRefresh = 3
+        IGetFileConfiguration<T> WhenFileChange();
     }
 }

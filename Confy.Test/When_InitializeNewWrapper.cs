@@ -80,9 +80,7 @@ namespace Confy.Test
                 FileContainerBuilder.BuildContainer<ComplexSampleObject>()
                     .LocatedAt(_path + @"\Config_ComplexSectionConfig.json")
                     .UsingSection("NO-SAMPLE")
-                    .UsingRefreshMode()
-                    .Automatic()
-                    .Each(TimeSpan.FromSeconds(2))
+                    .WhenFileChange()
                     .Build();
 
             var firstSnapshot = TestHelpers.DeepClone(container);
@@ -115,8 +113,7 @@ namespace Confy.Test
                 FileContainerBuilder.BuildContainer<ComplexSampleObject>()
                     .LocatedAt(_path + @"\Config_ComplexSectionConfig.json")
                     .UsingSection("NO-SAMPLE")
-                    .UsingRefreshMode()
-                    .LookingAtFileEachMode(TimeSpan.FromSeconds(2))
+                    .WhenFileChange()
                     .Build();
 
             var firstSnapshot = TestHelpers.DeepClone(container);
@@ -149,8 +146,7 @@ namespace Confy.Test
                 FileContainerBuilder.BuildContainer<ComplexSampleObject>()
                     .LocatedAt(_path + @"\Config_ComplexSectionConfig.json")
                     .UsingSection("NO-SAMPLE")
-                    .UsingRefreshMode()
-                    .LookingAtFileEachMode(TimeSpan.FromSeconds(10))
+                    .WhenFileChange()
                     .Build();
 
             var firstSnapshot = TestHelpers.DeepClone(container);
@@ -168,10 +164,10 @@ namespace Confy.Test
 
             Assert.IsNotNull(secondSnapshot.Configuration);
             Assert.IsNotNull(secondSnapshot.Configuration.SampleSimpleObject);
-            Assert.AreEqual("Complex Name", secondSnapshot.Configuration.ComplexFirstLevelName);
-            Assert.AreEqual(new DateTime(2016, 10, 4, 5, 20, 0), secondSnapshot.Configuration.TimeStamp);
-            Assert.AreEqual("Second Level Name", secondSnapshot.Configuration.SampleSimpleObject.Name);
-            Assert.AreEqual(50, secondSnapshot.Configuration.SampleSimpleObject.Age);
+            Assert.AreEqual("New Complex Name", secondSnapshot.Configuration.ComplexFirstLevelName);
+            Assert.AreEqual(new DateTime(2017, 10, 4, 5, 20, 0), secondSnapshot.Configuration.TimeStamp);
+            Assert.AreEqual("New Second Level Name", secondSnapshot.Configuration.SampleSimpleObject.Name);
+            Assert.AreEqual(30, secondSnapshot.Configuration.SampleSimpleObject.Age);
         }
     }
 }
