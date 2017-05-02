@@ -74,29 +74,27 @@ namespace Confy.File
             _refreshing = true;
             if (_section == string.Empty)
             {
-                var bckConfig = Helpers.DeepClone(_configuration);
                 try
                 {
-                    _configuration = Json.JsonLoader.ConvertFromJson<T>(_filePath);
+                    var intermediateStepConfig = Json.JsonLoader.ConvertFromJson<T>(_filePath);
+                    _configuration = intermediateStepConfig;
                     _isConsistant = true;
                 }
                 catch (Exception)
                 {
-                    _configuration = bckConfig;
                     _isConsistant = false;
                 }
             }
             else if (_section != string.Empty)
             {
-                var bckConfig = Helpers.DeepClone(_configuration);
                 try
                 {
-                    _configuration = Json.JsonLoader.ConvertFromJson<T>(_filePath, _section);
+                    var intermediateStepConfig = Json.JsonLoader.ConvertFromJson<T>(_filePath, _section);
+                    _configuration = intermediateStepConfig;
                     _isConsistant = true;
                 }
                 catch (Exception)
                 {
-                    _configuration = bckConfig;
                     _isConsistant = false;
                 }
             }
