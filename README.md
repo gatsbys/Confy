@@ -53,6 +53,26 @@ Added New ManualReload method, to give a way for exception control flows.
 
 The Nuget is available at : 
 
+## Camaleonic example
+
+{
+"SAMPLE":{
+},
+"NO-SAMPLE":{
+"ComplexFirstLevelName":"New Complex Name",
+"TimeStamp":"10/04/2017 05:20:00",
+"SampleSimpleObject":{
+"Name":"New Second Level Name",
+"Age":"30",
+"CamaleonicSample":"<cam>NO-SAMPLE->TimeStamp</cam>"
+}
+}
+}
+
+This will get the value inside the section "No-Sample" and the field "Time Stamp".
+
+If not <cam> tah then no substitution is done.
+
 ## Example Quick Usage
 
  var container =
