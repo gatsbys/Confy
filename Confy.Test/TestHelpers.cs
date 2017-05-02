@@ -17,7 +17,11 @@ namespace Confy.Test
                        @"\Config_ComplexSectionConfig.json";
             var content = @"{
                               'SAMPLE': {
-
+'Arraya': [
+                                  {
+                'ExampleData': '10/04/2020 05:20:00'
+                                  }
+                                ]
                               },
                               'NO-SAMPLE' : {
                                 'ComplexFirstLevelName': 'New Complex Name',
@@ -25,7 +29,7 @@ namespace Confy.Test
                                 'SampleSimpleObject': {
                                   'Name': 'New Second Level Name',
                                   'Age': '30',
-                                  'CamaleonicSample' : '<cam>NO-SAMPLE->TimeStamp</cam>'
+                                  'CamaleonicSample' : '<cam>SAMPLE->TimeStamp</cam>'
                                 }
                               }
                             }
@@ -72,16 +76,19 @@ namespace Confy.Test
             var path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) +
                        @"\Config_ComplexSectionConfig.json";
             var content = @"{
-                              'SAMPLE': {
-
-                              },
+                              'SAMPLE': {'Arraya': [
+                                  {
+                'ExampleData': '10/04/2020 05:20:00'
+                                  }
+                                ]}
+                              ,
                               'NO-SAMPLE' : {
                                 'ComplexFirstLevelName': 'Complex Name',
                                 'TimeStamp': '10/04/2016 05:20:00',
                                 'SampleSimpleObject': {
                                   'Name': 'Second Level Name',
                                   'Age': '50',
-                                  'CamaleonicSample' : '<cam>NO-SAMPLE->TimeStamp</cam>'
+                                  'CamaleonicSample' : '<cam>SAMPLE->Arraya->0->ExampleData</cam>'
                                 }
                               }
                             }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -39,10 +40,10 @@ namespace Confy.Json
                         return ob;
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
 
-                    Trace.TraceWarning("Unable to get exclusive lock, waiting and retrying");
+                    Trace.TraceWarning("Unable to load config, retrying...");
                     if (retries > 5)
                         throw;
                     retries++;
@@ -66,7 +67,20 @@ namespace Confy.Json
                 return source;
             }
             camaleonPath = camaleonPath.Skip(1).ToArray();
-            value = camaleonPath.Aggregate(value, (current, s1) => current[s1]);
+            foreach (var s in camaleonPath)
+            {
+                if (s.All(x=>Char.IsNumber(x)))
+                {
+                    var index = int.Parse(s);
+                    var stepValue = ((JArray) value)[index];
+                    value = stepValue;
+                }
+                else
+                {
+                    value = value[s];
+                }
+            }
+            //value = camaleonPath.Aggregate(value, (current, s1) => current[s1]);
             return regex.Replace(source, value.Value<string>());
         }
     }
