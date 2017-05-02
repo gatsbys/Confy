@@ -46,9 +46,9 @@ The Nuget is available at :
 ```
 
 ### 3.0 
-Added Camaleonic fields, that fields are fields that allow you to copy at json level the value of other tag.
-Added Inconsitant controls, if configuration cannot be loaded correctly when file changes, you can specify if wants to throw an exception the next time you access to the container.
-Added New ManualReload method, to give a way for exception control flows.
+1. Added Camaleonic fields, that fields are fields that allow you to copy at json level the value of other tag.
+2. Added Inconsitant controls, if configuration cannot be loaded correctly when file changes, you can specify if wants to throw an exception the next time you access to the container.
+3. Added New ManualReload method, to give a way for exception control flows.
 ## Installation
 
 The Nuget is available at : 
