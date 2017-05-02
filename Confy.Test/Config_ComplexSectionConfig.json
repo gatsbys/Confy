@@ -6,9 +6,9 @@
                                 'ComplexFirstLevelName': 'New Complex Name',
                                 'TimeStamp': '10/04/2017 05:20:00',
                                 'SampleSimpleObject': {
-                                  'Name': 'Second Level Name',
-                                  'Age': '50',
-                                  'AgeTwo' : '<cam>NO-SAMPLE->TimeStamp</cam>'
+                                  'Name': 'New Second Level Name',
+                                  'Age': '30',
+                                  'CamaleonicSample' : '<cam>NO-SAMPLE->TimeStamp</cam>'
                                 }
                               }
                             }

@@ -2,11 +2,13 @@
 using System.Threading;
 using Confy.File.FluentBuilder.Interfaces;
 using System.IO;
+using Confy.File.Exceptions;
+using Confy.File.IO;
 
 namespace Confy.File
 {
     [Serializable]
-    public class FileContainer<T> : IFileContainer<T>, IFilePath<T>, IParsingOptions<T>, IGetFileConfiguration<T>, IRefreshOptions<T> where T : new()
+    public class FileContainer<T> : IFileContainer<T>, IFilePath<T>, IParsingOptions<T>, IGetFileConfiguration<T>, IRefreshOptions<T>, IConsistantOptions<T> where T : new()
     {
         private T _configuration = new T();
         public T Configuration
@@ -16,6 +18,7 @@ namespace Confy.File
                 while (_refreshing)
                 {
                 }
+                if(_throwIfNotConsistant && !_isConsistant) throw  new InconsistantContainerException("After 10 times, unable to lock the file for load the configuration");
                 return _configuration;
             }
             set
@@ -23,11 +26,18 @@ namespace Confy.File
                 _configuration = value;
             }
         }
+
+        public void UpdateManually()
+        {
+            LoadConfiguration();
+        }
+
         private string _filePath;
         private string _section;
-        private bool _refreshMode = false;
-        private object _lock = new object();
-        private bool _refreshing = false;
+        private bool _refreshMode;
+        private bool _refreshing;
+        private bool _isConsistant = false;
+        private bool _throwIfNotConsistant;
         private delegate void ReloaderDelegate();
         public IParsingOptions<T> LocatedAt(string path)
         {
@@ -64,65 +74,97 @@ namespace Confy.File
             _refreshing = true;
             if (_section == string.Empty)
             {
-                _configuration = Json.JsonLoader.ConvertFromJson<T>(_filePath);
+                var bckConfig = Helpers.DeepClone(_configuration);
+                try
+                {
+                    _configuration = Json.JsonLoader.ConvertFromJson<T>(_filePath);
+                    _isConsistant = true;
+                }
+                catch (Exception)
+                {
+                    _configuration = bckConfig;
+                    _isConsistant = false;
+                }
             }
             else if (_section != string.Empty)
             {
-                _configuration = Json.JsonLoader.ConvertFromJson<T>(_filePath, _section);
+                var bckConfig = Helpers.DeepClone(_configuration);
+                try
+                {
+                    _configuration = Json.JsonLoader.ConvertFromJson<T>(_filePath, _section);
+                    _isConsistant = true;
+                }
+                catch (Exception)
+                {
+                    _configuration = bckConfig;
+                    _isConsistant = false;
+                }
             }
             _refreshing = false;
-    }
+        }
 
-    private void ActivateReloaderDaemon()
-    {
-        if (_refreshMode)
+        private void ActivateReloaderDaemon()
         {
-            SetWatcher();
-            var reloadDelegateFBased = new ReloaderDelegate(StartLastUpdateFileBasedReloader);
-            reloadDelegateFBased.BeginInvoke(ReloaderCallback, reloadDelegateFBased);
+            if (_refreshMode)
+            {
+                SetWatcher();
+                var reloadDelegateFBased = new ReloaderDelegate(StartLastUpdateFileBasedReloader);
+                reloadDelegateFBased.BeginInvoke(ReloaderCallback, reloadDelegateFBased);
+            }
         }
-    }
-    private void StartLastUpdateFileBasedReloader()
-    {
-        while (true)
+        private void StartLastUpdateFileBasedReloader()
         {
+            while (true)
+            {
+            }
         }
-    }
-    private void ReloaderCallback(IAsyncResult ar)
-    {
-        try
+        private void ReloaderCallback(IAsyncResult ar)
         {
-            var caller = (ReloaderDelegate)ar.AsyncState;
-            caller.EndInvoke(ar);
+            try
+            {
+                var caller = (ReloaderDelegate)ar.AsyncState;
+                caller.EndInvoke(ar);
+            }
+            catch (Exception)
+            { }
         }
-        catch (Exception)
-        { }
-    }
-    private void SetWatcher()
-    {
-        FileSystemWatcher watcher = new FileSystemWatcher();
-        var path = Path.GetDirectoryName(_filePath);
-        var file = Path.GetFileName(_filePath);
-        watcher.Path = path;
-        /* Watch for changes in LastAccess and LastWrite times, and 
-           the renaming of files or directories. */
-        watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
-           | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-        watcher.Filter = file;
-        // Add event handlers.
-        watcher.Changed += new FileSystemEventHandler(OnChanged);
-        // Begin watching.
-        watcher.EnableRaisingEvents = true;
-    }
-    private void OnChanged(object source, FileSystemEventArgs e)
-    {
-        LoadConfiguration();
-    }
+        private void SetWatcher()
+        {
+            FileSystemWatcher watcher = new FileSystemWatcher();
+            var path = Path.GetDirectoryName(_filePath);
+            var file = Path.GetFileName(_filePath);
+            watcher.Path = path;
+            /* Watch for changes in LastAccess and LastWrite times, and 
+               the renaming of files or directories. */
+            watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+               | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+            watcher.Filter = file;
+            // Add event handlers.
+            watcher.Changed += new FileSystemEventHandler(OnChanged);
+            // Begin watching.
+            watcher.EnableRaisingEvents = true;
+        }
+        private void OnChanged(object source, FileSystemEventArgs e)
+        {
+            LoadConfiguration();
+        }
 
-    public IGetFileConfiguration<T> WhenFileChange()
-    {
-        _refreshMode = true;
-        return this;
+        public IConsistantOptions<T> WhenFileChange()
+        {
+            _refreshMode = true;
+            return this;
+        }
+
+        public IGetFileConfiguration<T> ThrowsIfUnableToRefresh()
+        {
+            _throwIfNotConsistant = true;
+            return this;
+        }
+
+        public IGetFileConfiguration<T> NoThrowsIfNotRefresh()
+        {
+            _throwIfNotConsistant = false;
+            return this;
+        }
     }
-}
 }

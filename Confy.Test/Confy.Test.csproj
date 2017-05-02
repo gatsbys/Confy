@@ -54,7 +54,8 @@
     <Compile Include="SampleSimpleObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers.cs" />
-    <Compile Include="When_InitializeNewWrapper.cs" />
+    <Compile Include="When_InitializeNewWrapper_WithThrowingOnReload.cs" />
+    <Compile Include="When_InitializeNewWrapper_WithNoThrowingOnReload.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Confy.File\Confy.File.csproj">

@@ -44,9 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\InconsistantContainerException.cs" />
     <Compile Include="FluentBuilder\FileContainerBuilder.cs" />
     <Compile Include="IFileContainer.cs" />
     <Compile Include="FluentBuilder\Interfaces\FileBuilder.cs" />
+    <Compile Include="IO\Helpers.cs" />
     <Compile Include="IO\IOHelper.cs" />
     <Compile Include="Json\JsonLoader.cs" />
     <Compile Include="FileContainer.cs" />

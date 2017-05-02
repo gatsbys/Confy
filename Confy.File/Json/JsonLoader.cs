@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -21,16 +22,31 @@ namespace Confy.Json
 
         public static T ConvertFromJson<T>(string file, string section)
         {
-            var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            using (StreamReader reader = new StreamReader(fileStream))
+            var retries = 0;
+            while (true)
             {
-                var text = reader.ReadToEnd();
-                var parsed = JObject.Parse(text);
-                var camaleonic = ApplyCamaleonTags(text, parsed);
-                parsed = JObject.Parse(camaleonic);
-                var token = parsed.SelectToken(section);
-                var ob = token.ToObject<T>();
-                return ob;
+                try
+                {
+                    var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.None);
+                    using (StreamReader reader = new StreamReader(fileStream))
+                    {
+                        var text = reader.ReadToEnd();
+                        var parsed = JObject.Parse(text);
+                        var camaleonic = ApplyCamaleonTags(text, parsed);
+                        parsed = JObject.Parse(camaleonic);
+                        var token = parsed.SelectToken(section);
+                        var ob = token.ToObject<T>();
+                        return ob;
+                    }
+                }
+                catch (Exception)
+                {
+
+                    Trace.TraceWarning("Unable to get exclusive lock, waiting and retrying");
+                    if (retries > 5)
+                        throw;
+                    retries++;
+                }
             }
         }
 
@@ -41,7 +57,7 @@ namespace Confy.Json
             string camaleonValue = result.Groups[1].ToString();
             var camaleonPath = camaleonValue.Split(new[] { "->" }, StringSplitOptions.None);
             JToken value = jObject;
-            if (camaleonPath.Any())
+            if (camaleonPath.Any(x => x != string.Empty))
             {
                 value = jObject[camaleonPath[0]];
             }

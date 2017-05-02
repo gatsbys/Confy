@@ -21,6 +21,11 @@ namespace Confy.File.FluentBuilder.Interfaces
     public interface IRefreshOptions<T>
     {
         IGetFileConfiguration<T> NoRefresh();
-        IGetFileConfiguration<T> WhenFileChange();
+        IConsistantOptions<T> WhenFileChange();
+    }
+    public interface IConsistantOptions<T>
+    {
+        IGetFileConfiguration<T> ThrowsIfUnableToRefresh();
+        IGetFileConfiguration<T> NoThrowsIfNotRefresh();
     }
 }
