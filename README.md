@@ -54,7 +54,7 @@ Added New ManualReload method, to give a way for exception control flows.
 The Nuget is available at : 
 
 ## Camaleonic example
-
+'''json
 {
 "SAMPLE":{
 },
@@ -68,7 +68,7 @@ The Nuget is available at :
 }
 }
 }
-
+'''json
 This will get the value inside the section "No-Sample" and the field "Time Stamp".
 
 If not <cam> tah then no substitution is done.
