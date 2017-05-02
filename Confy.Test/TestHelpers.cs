@@ -35,7 +35,8 @@ namespace Confy.Test
                                 'TimeStamp': '10/04/2017 05:20:00',
                                 'SampleSimpleObject': {
                                   'Name': 'New Second Level Name',
-                                  'Age': '30'
+                                  'Age': '30',
+                                  'AgeTwo' : '<cam>NO-SAMPLE->TimeStamp</cam>'
                                 }
                               }
                             }
@@ -56,7 +57,8 @@ namespace Confy.Test
                                 'TimeStamp': '10/04/2016 05:20:00',
                                 'SampleSimpleObject': {
                                   'Name': 'Second Level Name',
-                                  'Age': '50'
+                                  'Age': '50',
+                                  'AgeTwo' : '<cam>NO-SAMPLE->TimeStamp</cam>'
                                 }
                               }
                             }

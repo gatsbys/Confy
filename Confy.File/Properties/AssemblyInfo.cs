@@ -6,11 +6,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Confy.File")]
-[assembly: AssemblyDescription("Container for configuration types that are mapped from .json files, forcing auto refresh each custom period or when file is modified")]
+[assembly: AssemblyDescription("Container for configuration types that are mapped from .json files, forcing auto refresh each custom period or when file is modified checking that each custom periods.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Confy.File")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
+
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

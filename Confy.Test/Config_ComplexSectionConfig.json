@@ -7,7 +7,8 @@
                                 'TimeStamp': '10/04/2016 05:20:00',
                                 'SampleSimpleObject': {
                                   'Name': 'Second Level Name',
-                                  'Age': '50'
+                                  'Age': '50',
+                                  'AgeTwo' : '<cam>NO-SAMPLE->TimeStamp</cam>'
                                 }
                               }
                             }

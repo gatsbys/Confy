@@ -11,5 +11,6 @@ namespace Confy.Test
     {
         public string Name { get; set; }
         public int Age { get; set; }
+        public DateTime AgeTwo { get; set; }
     }
 }
