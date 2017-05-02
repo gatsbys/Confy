@@ -44,5 +44,23 @@ The Nuget is available at :
                     .WhenFileChange()
                     .Build();
 ```
+
+### 3.0 
+Added Camaleonic fields, that fields are fields that allow you to copy at json level the value of other tag.
+Added Inconsitant controls, if configuration cannot be loaded correctly when file changes, you can specify if wants to throw an exception the next time you access to the container.
+Added New ManualReload method, to give a way for exception control flows.
+## Installation
+
+The Nuget is available at : 
+
+## Example Quick Usage
+
+ var container =
+                FileContainerBuilder.BuildContainer<ComplexSampleObject>()
+                    .LocatedAt(_path + @"\Config_ComplexSectionConfig.json")
+                    .UsingSection("NO-SAMPLE")
+                    .WhenFileChange()
+                    .ThrowsIfUnableToRefresh()
+                    .Build();
                 
         
