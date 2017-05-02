@@ -17,9 +17,32 @@ The Nuget is available at :
 ## Example Quick Usage
 
 ```csharp
-
+ var container =
+                FileContainerBuilder.BuildContainer<ComplexSampleObject>()
+                    .LocatedAt(_path + @"\Config_ComplexSectionConfig.json")
+                    .UsingSection("NO-SAMPLE")
+                    .UsingRefreshMode()
+                    .Automatic()
+                    .Each(TimeSpan.FromSeconds(2))
+                    .Build();
 ```
 
+### 2.0 
+Implementation of FileSystemWatcher to reload the configuration.
+Removed form the fluent api the old reload descriptor methods. 
+## Installation
 
+The Nuget is available at : 
+
+## Example Quick Usage
+
+```csharp
+ var container =
+                FileContainerBuilder.BuildContainer<ComplexSampleObject>()
+                    .LocatedAt(_path + @"\Config_ComplexSectionConfig.json")
+                    .UsingSection("NO-SAMPLE")
+                    .WhenFileChange()
+                    .Build();
+```
                 
         
