@@ -1,14 +1,14 @@
 {
-                              'SAMPLE': {
+                              "SAMPLE": {
 
                               },
-                              'NO-SAMPLE' : {
-                                'ComplexFirstLevelName': 'New Complex Name',
-                                'TimeStamp': '10/04/2017 05:20:00',
-                                'SampleSimpleObject': {
-                                  'Name': 'New Second Level Name',
-                                  'Age': '30',
-                                  'CamaleonicSample' : '<cam>NO-SAMPLE->TimeStamp</cam>'
+                              "NO-SAMPLE" : {
+                                "ComplexFirstLevelName": "New Complex Name",
+                                "TimeStamp": "10/04/2017 05:20:00",
+                                "SampleSimpleObject": {
+                                  "Name": "New Second Level Name",
+                                  "Age": "30",
+                                  "CamaleonicSample" : "<cam>NO-SAMPLE->TimeStamp</cam>"
                                 }
                               }
                             }
