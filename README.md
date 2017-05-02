@@ -12,7 +12,7 @@ The first one, added the Confy.File and Confy.Tests
 
 ## Installation
 
-The Nuget is available at : 
+The Nuget is available at : Old version at https://www.nuget.org/packages/Confy.File/1.0.0
 
 ## Example Quick Usage
 
@@ -32,7 +32,7 @@ Implementation of FileSystemWatcher to reload the configuration.
 Removed form the fluent api the old reload descriptor methods. 
 ## Installation
 
-The Nuget is available at : 
+The Nuget is available at : No version published
 
 ## Example Quick Usage
 
@@ -51,7 +51,7 @@ The Nuget is available at :
 3. Added New ManualReload method, to give a way for exception control flows.
 ## Installation
 
-The Nuget is available at : 
+The Nuget is available at : https://www.nuget.org/packages/Confy.File/3.0.0
 
 ## Camaleonic example
 ```json
