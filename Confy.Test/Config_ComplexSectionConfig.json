@@ -1,15 +1,18 @@
 {
-                              'SAMPLE': {'Arraya': [
-                                  {
-                'ExampleData': '10/04/2020 05:20:00'
-                                  }
-                                ]}
-                              ,
+                              'SAMPLE': {
+
+                              },
                               'NO-SAMPLE' : {
-                                'ComplexFirstLevelName': 'Complex Name',
-                                'TimeStamp': '10/04/2016 05:20:00',
+                                'ComplexFirstLevelName': 'New Complex Name',
+                                'TimeStamp': '10/04/2017 05:20:00',
                                 'SampleSimpleObject': {
-                                  'Name': 'Second Level Name',
+                                  'Name': 'New Second Level Name',
+                                  'Age': '30',
+                                  'CamaleonicSample' : '<cam>NO-SAMPLE->TimeStamp</cam>'
+                                }
+                              }
+                            }
+                            
                                   'Age': '50',
                                   'CamaleonicSample' : '<cam>SAMPLE->Arraya->0->ExampleData</cam>'
                                 }

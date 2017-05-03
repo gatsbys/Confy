@@ -177,7 +177,7 @@ namespace Confy.Test
             Assert.AreEqual(new DateTime(2016, 10, 4, 5, 20, 0), firstSnapshot.Configuration.TimeStamp);
             Assert.AreEqual("Second Level Name", firstSnapshot.Configuration.SampleSimpleObject.Name);
             Assert.AreEqual(50, firstSnapshot.Configuration.SampleSimpleObject.Age);
-            Assert.AreEqual(firstSnapshot.Configuration.TimeStamp, firstSnapshot.Configuration.SampleSimpleObject.CamaleonicSample);
+            Assert.AreEqual(new DateTime(2020, 10, 4, 5, 20, 0), firstSnapshot.Configuration.SampleSimpleObject.CamaleonicSample);
 
             Assert.IsNotNull(secondSnapshot.Configuration);
             Assert.IsNotNull(secondSnapshot.Configuration.SampleSimpleObject);
@@ -185,7 +185,7 @@ namespace Confy.Test
             Assert.AreEqual(new DateTime(2017, 10, 4, 5, 20, 0), secondSnapshot.Configuration.TimeStamp);
             Assert.AreEqual("New Second Level Name", secondSnapshot.Configuration.SampleSimpleObject.Name);
             Assert.AreEqual(30, secondSnapshot.Configuration.SampleSimpleObject.Age);
-            Assert.AreEqual(secondSnapshot.Configuration.TimeStamp, secondSnapshot.Configuration.SampleSimpleObject.CamaleonicSample);
+            Assert.AreEqual(new DateTime(2020, 10, 4, 5, 20, 0), secondSnapshot.Configuration.SampleSimpleObject.CamaleonicSample);
         }
     }
 }
