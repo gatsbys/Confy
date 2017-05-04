@@ -57,6 +57,7 @@ namespace Confy.Json
                 JToken value = ExtractJsonValue(jObject, camaleonPath);
                 if (value == null) continue;
                 result = result.Replace(r.Groups[0].ToString(), value.Value<string>());
+                jObject = JObject.Parse(result);
             }
             return result;
         }
