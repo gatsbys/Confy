@@ -47,13 +47,18 @@ namespace Confy.Json
 
         private static string ApplyCamaleonTagsIfNeeded(string source, JObject jObject)
         {
+            string result = source;
             Regex regex = new Regex("<cam>(.*)</cam>");
-            var result = regex.Match(source);
-            string camaleonValue = result.Groups[1].ToString();
-            var camaleonPath = GetCamaleonPath(camaleonValue);
-            JToken value = ExtractJsonValue(jObject, camaleonPath);
-            if (value == null) return source;
-            return regex.Replace(source, value.Value<string>());
+            var matches = regex.Matches(source);
+            foreach (Match r in matches)
+            {
+                string camaleonValue = r.Groups[1].ToString();
+                var camaleonPath = GetCamaleonPath(camaleonValue);
+                JToken value = ExtractJsonValue(jObject, camaleonPath);
+                if (value == null) continue;
+                result = result.Replace(r.Groups[0].ToString(), value.Value<string>());
+            }
+            return result;
         }
         private static string[] GetCamaleonPath(string camaleonValue)
         {
