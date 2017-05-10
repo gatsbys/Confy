@@ -26,10 +26,10 @@ namespace Confy.File.FluentBuilder.Interfaces
     }
     public interface IConsistantOptions<T>
     {
-        IOnChangeEventHAndlerOrBuild<T> ThrowsIfUnableToRefresh(bool throwIfNotLoaded);
+        IOnChangeEventHndlerOrBuild<T> ThrowsIfUnableToRefresh(bool throwIfNotLoaded);
     }
 
-    public interface IOnChangeEventHAndlerOrBuild<T> 
+    public interface IOnChangeEventHndlerOrBuild<T> 
     {
         IFileContainer<T> Build();
         IGetFileConfiguration<T> WithActionOnChanged(ConfigurationReloadHandler handler);

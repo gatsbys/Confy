@@ -10,12 +10,12 @@ namespace Confy.File
 {
     public delegate void ConfigurationReloadHandler();
     [Serializable]
-    public class FileContainer<T> : IFileContainer<T>, IFilePath<T>, IParsingOptions<T>, IGetFileConfiguration<T>, IRefreshOptions<T>, IConsistantOptions<T>, IOnChangeEventHAndlerOrBuild<T> where T : new()
+    public class FileContainer<T> : IFileContainer<T>, IFilePath<T>, IParsingOptions<T>, IGetFileConfiguration<T>, IRefreshOptions<T>, IConsistantOptions<T>, IOnChangeEventHndlerOrBuild<T> where T : new()
     {
 
         #region Public Members
 
-        public event ConfigurationReloadHandler OnConfigurationReload = delegate { };
+        public event ConfigurationReloadHandler OnConfigurationReload;
         public T Configuration
         {
             get
@@ -91,7 +91,7 @@ namespace Confy.File
             return this;
         }
 
-        public IOnChangeEventHAndlerOrBuild<T> ThrowsIfUnableToRefresh(bool throwIfNotLoaded)
+        public IOnChangeEventHndlerOrBuild<T> ThrowsIfUnableToRefresh(bool throwIfNotLoaded)
         {
             _throwIfNotConsistant = throwIfNotLoaded;
             return this;
@@ -113,7 +113,7 @@ namespace Confy.File
         private void OnChanged(object source, FileSystemEventArgs e)
         {
             LoadConfiguration();
-            OnConfigurationReload();
+            OnConfigurationReload?.Invoke();
         }
 
         private void LoadConfiguration()
