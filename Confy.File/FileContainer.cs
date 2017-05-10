@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.Threading;
 using Confy.File.FluentBuilder.Interfaces;
 using System.IO;
@@ -7,10 +8,14 @@ using Confy.File.IO;
 
 namespace Confy.File
 {
+    public delegate void ConfigurationReloadHandler();
     [Serializable]
-    public class FileContainer<T> : IFileContainer<T>, IFilePath<T>, IParsingOptions<T>, IGetFileConfiguration<T>, IRefreshOptions<T>, IConsistantOptions<T> where T : new()
+    public class FileContainer<T> : IFileContainer<T>, IFilePath<T>, IParsingOptions<T>, IGetFileConfiguration<T>, IRefreshOptions<T>, IConsistantOptions<T>, IOnChangeEventHAndlerOrBuild<T> where T : new()
     {
-        private T _configuration = new T();
+
+        #region Public Members
+
+        public event ConfigurationReloadHandler OnConfigurationReload = delegate { };
         public T Configuration
         {
             get
@@ -18,7 +23,7 @@ namespace Confy.File
                 while (_refreshing)
                 {
                 }
-                if(_throwIfNotConsistant && !_isConsistant) throw  new InconsistantContainerException("After 10 times, unable to lock the file for load the configuration");
+                if (_throwIfNotConsistant && !_isConsistant) throw new InconsistantContainerException("After 10 times, unable to lock the file for load the configuration");
                 return _configuration;
             }
             set
@@ -27,31 +32,36 @@ namespace Confy.File
             }
         }
 
-        public void UpdateManually()
-        {
-            LoadConfiguration();
-        }
+        #endregion
 
+        #region Private Members
+
+        private T _configuration = new T();
         private string _filePath;
         private string _section;
         private bool _refreshMode;
         private bool _refreshing;
-        private bool _isConsistant = false;
+        private bool _isConsistant;
         private bool _throwIfNotConsistant;
         private delegate void ReloaderDelegate();
+
+        #endregion
+
+        #region Fluent Api Builder Methods
+
         public IParsingOptions<T> LocatedAt(string path)
         {
             _filePath = path;
             return this;
         }
 
-        public IRefreshOptions<T> UsingSection(string section)
+        public IRefreshOptions<T> UsingSectionInFile(string section)
         {
             _section = section;
             return this;
         }
 
-        public IRefreshOptions<T> GetAll()
+        public IRefreshOptions<T> UsingEntireFile()
         {
             _section = string.Empty;
             return this;
@@ -67,6 +77,43 @@ namespace Confy.File
             LoadConfiguration();
             ActivateReloaderDaemon();
             return this;
+        }
+
+        public IConsistantOptions<T> RefreshingWhenFileChange()
+        {
+            _refreshMode = true;
+            return this;
+        }
+
+        public IGetFileConfiguration<T> WithActionOnChanged(ConfigurationReloadHandler handler)
+        {
+            OnConfigurationReload += handler;
+            return this;
+        }
+
+        public IOnChangeEventHAndlerOrBuild<T> ThrowsIfUnableToRefresh(bool throwIfNotLoaded)
+        {
+            _throwIfNotConsistant = throwIfNotLoaded;
+            return this;
+        }
+
+        #endregion
+
+        #region Exposed Methods
+
+        public void UpdateManually()
+        {
+            LoadConfiguration();
+        } 
+
+        #endregion
+
+        #region Private Methods
+
+        private void OnChanged(object source, FileSystemEventArgs e)
+        {
+            LoadConfiguration();
+            OnConfigurationReload();
         }
 
         private void LoadConfiguration()
@@ -110,12 +157,14 @@ namespace Confy.File
                 reloadDelegateFBased.BeginInvoke(ReloaderCallback, reloadDelegateFBased);
             }
         }
+
         private void StartLastUpdateFileBasedReloader()
         {
             while (true)
             {
             }
         }
+
         private void ReloaderCallback(IAsyncResult ar)
         {
             try
@@ -126,6 +175,7 @@ namespace Confy.File
             catch (Exception)
             { }
         }
+
         private void SetWatcher()
         {
             FileSystemWatcher watcher = new FileSystemWatcher();
@@ -142,27 +192,7 @@ namespace Confy.File
             // Begin watching.
             watcher.EnableRaisingEvents = true;
         }
-        private void OnChanged(object source, FileSystemEventArgs e)
-        {
-            LoadConfiguration();
-        }
 
-        public IConsistantOptions<T> WhenFileChange()
-        {
-            _refreshMode = true;
-            return this;
-        }
-
-        public IGetFileConfiguration<T> ThrowsIfUnableToRefresh()
-        {
-            _throwIfNotConsistant = true;
-            return this;
-        }
-
-        public IGetFileConfiguration<T> NoThrowsIfNotRefresh()
-        {
-            _throwIfNotConsistant = false;
-            return this;
-        }
+        #endregion
     }
 }

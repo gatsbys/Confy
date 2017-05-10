@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 
 namespace Confy.File.FluentBuilder.Interfaces
 {
@@ -14,18 +15,23 @@ namespace Confy.File.FluentBuilder.Interfaces
 
     public interface IParsingOptions<T>
     {
-        IRefreshOptions<T> UsingSection(string section);
-        IRefreshOptions<T> GetAll();
+        IRefreshOptions<T> UsingSectionInFile(string section);
+        IRefreshOptions<T> UsingEntireFile();
     }
 
     public interface IRefreshOptions<T>
     {
         IGetFileConfiguration<T> NoRefresh();
-        IConsistantOptions<T> WhenFileChange();
+        IConsistantOptions<T> RefreshingWhenFileChange();
     }
     public interface IConsistantOptions<T>
     {
-        IGetFileConfiguration<T> ThrowsIfUnableToRefresh();
-        IGetFileConfiguration<T> NoThrowsIfNotRefresh();
+        IOnChangeEventHAndlerOrBuild<T> ThrowsIfUnableToRefresh(bool throwIfNotLoaded);
+    }
+
+    public interface IOnChangeEventHAndlerOrBuild<T> 
+    {
+        IFileContainer<T> Build();
+        IGetFileConfiguration<T> WithActionOnChanged(ConfigurationReloadHandler handler);
     }
 }

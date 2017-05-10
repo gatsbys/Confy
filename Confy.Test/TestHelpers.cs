@@ -63,13 +63,6 @@ namespace Confy.Test
             {
                 fs.Write(bytes, 0, bytes.Length);
             }
-            using (FileStream fs =
-        System.IO.File.Open(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
-            {
-                Thread.Sleep(TimeSpan.FromSeconds(20));
-            }
-
-
         }
 
         public static void SetConfigAsDef()

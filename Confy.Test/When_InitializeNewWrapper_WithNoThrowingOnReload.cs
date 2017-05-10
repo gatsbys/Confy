@@ -28,11 +28,13 @@ namespace Confy.Test
         [TestCategory("Initializers"), TestCategory("SimpleObjects"), TestCategory("File"), TestCategory("NoThrowingOnReload")]
         public void If_CreateSimpleObjectWrapperWithAllSectionsNoRefresh_Then_ReturnCorrectSimpleObjectWrapper()
         {
+            TestHelpers.SetConfigAsDef();
+
             // ARRANGE & ACT
             var container =
                 FileContainerBuilder.BuildContainer<SampleSimpleObject>()
                     .LocatedAt(_path + @"\Config_SimpleNoSectionConfig.json")
-                    .GetAll()
+                    .UsingEntireFile()
                     .NoRefresh()
                     .Build();
 
@@ -47,11 +49,12 @@ namespace Confy.Test
         [TestCategory("Initializers"), TestCategory("SimpleObjects"), TestCategory("File"), TestCategory("NoThrowingOnReload")]
         public void If_CreateSimpleObjectWrapperWithJustOneSectionsNoRefresh_Then_ReturnCorrectSimpleObjectWrapper()
         {
+            TestHelpers.SetConfigAsDef();
             // ARRANGE & ACT
             var container =
                 FileContainerBuilder.BuildContainer<SampleSimpleObject>()
                     .LocatedAt(_path + @"\Config_SimpleSectionConfig.json")
-                    .UsingSection("NO-SAMPLE")
+                    .UsingSectionInFile("NO-SAMPLE")
                     .NoRefresh()
                     .Build();
 
@@ -66,11 +69,12 @@ namespace Confy.Test
         [TestCategory("Initializers"), TestCategory("Complex"), TestCategory("File"), TestCategory("NoThrowingOnReload")]
         public void If_CreateComplexObjectWrapperWithJustOneSectionsNoRefresh_Then_ReturnCorrectComplexObjectWrapper()
         {
+            TestHelpers.SetConfigAsDef();
             // ARRANGE & ACT
             var container =
                 FileContainerBuilder.BuildContainer<ComplexSampleObject>()
                     .LocatedAt(_path + @"\Config_ComplexSectionConfig.json")
-                    .UsingSection("NO-SAMPLE")
+                    .UsingSectionInFile("NO-SAMPLE")
                     .NoRefresh()
                     .Build();
 
@@ -89,13 +93,14 @@ namespace Confy.Test
         [TestCategory("Initializers"), TestCategory("Complex"), TestCategory("File"), TestCategory("LastUpdateRefreshMode"), TestCategory("NoThrowingOnReload")]
         public void If_CreateComplexObjectWrapperWithJustOneSectionsRefreshUsingLastUpdate_AndChangeOccurs_Then_ReturnCorrectComplexObjectWrapper()
         {
+            TestHelpers.SetConfigAsDef();
             // ARRANGE & ACT
             var container =
                 FileContainerBuilder.BuildContainer<ComplexSampleObject>()
                     .LocatedAt(_path + @"\Config_ComplexSectionConfig.json")
-                    .UsingSection("NO-SAMPLE")
-                    .WhenFileChange()
-                    .NoThrowsIfNotRefresh()
+                    .UsingSectionInFile("NO-SAMPLE")
+                    .RefreshingWhenFileChange()
+                    .ThrowsIfUnableToRefresh(false)
                     .Build();
 
             var firstSnapshot = Helpers.DeepClone(container);
@@ -123,13 +128,14 @@ namespace Confy.Test
         [TestCategory("Initializers"), TestCategory("Complex"), TestCategory("File"), TestCategory("LastUpdateRefreshMode"), TestCategory("NoThrowingOnReload")]
         public void If_CreateComplexObjectWrapperWithJustOneSectionsRefreshUsingLastUpdate_AndNoChangeOccurs_Then_ReturnCorrectComplexObjectWrapper()
         {
+            TestHelpers.SetConfigAsDef();
             // ARRANGE & ACT
             var container =
                 FileContainerBuilder.BuildContainer<ComplexSampleObject>()
                     .LocatedAt(_path + @"\Config_ComplexSectionConfig.json")
-                    .UsingSection("NO-SAMPLE")
-                    .WhenFileChange()
-                    .NoThrowsIfNotRefresh()
+                    .UsingSectionInFile("NO-SAMPLE")
+                    .RefreshingWhenFileChange()
+                    .ThrowsIfUnableToRefresh(false)
                     .Build();
 
             var firstSnapshot = Helpers.DeepClone(container);
@@ -156,13 +162,14 @@ namespace Confy.Test
         [TestCategory("Initializers"), TestCategory("Complex"), TestCategory("File"), TestCategory("LastUpdateRefreshMode")]
         public void If_CreateComplexObjectWrapperWithJustOneSectionsRefreshUsingLastUpdateAndCamaleonicField_AndChangeOccurs_Then_ReturnCorrectComplexObjectWrapper()
         {
+            TestHelpers.SetConfigAsDef();
             // ARRANGE & ACT
             var container =
                 FileContainerBuilder.BuildContainer<ComplexSampleObject>()
                     .LocatedAt(_path + @"\Config_ComplexSectionConfig.json")
-                    .UsingSection("NO-SAMPLE")
-                    .WhenFileChange()
-                    .NoThrowsIfNotRefresh()
+                    .UsingSectionInFile("NO-SAMPLE")
+                    .RefreshingWhenFileChange()
+                    .ThrowsIfUnableToRefresh(false)
                     .Build();
 
             var firstSnapshot = Helpers.DeepClone(container);
