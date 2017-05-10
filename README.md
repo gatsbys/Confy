@@ -49,9 +49,11 @@ The Nuget is available at : No version published
 1. Added Camaleonic fields, that fields are fields that allow you to copy at json level the value of other tag.
 2. Added Inconsitant controls, if configuration cannot be loaded correctly when file changes, you can specify if wants to throw an exception the next time you access to the container.
 3. Added New ManualReload method, to give a way for exception control flows.
+4. Added Event Handler when the reload is done, the you can pass a method to execute when the reload finish, for example, reinstantiate a class, or send an event to other applications, etc... (No event args on this version)
+
 ## Installation
 
-The Nuget is available at : https://www.nuget.org/packages/Confy.File/3.0.0
+The Nuget is available at : https://www.nuget.org/packages/Confy.File/3.2.0
 
 ## Camaleonic example
 ```json
@@ -74,13 +76,14 @@ This will get the value inside the section "No-Sample" and the field "Time Stamp
 If not \<cam> tag then no substitution is done.
 
 ## Example Quick Usage
-
+```csharp
  var container =
                 FileContainerBuilder.BuildContainer<ComplexSampleObject>()
-                    .LocatedAt(_path + @"\Config_ComplexSectionConfig.json")
-                    .UsingSection("NO-SAMPLE")
-                    .WhenFileChange()
-                    .ThrowsIfUnableToRefresh()
-                    .Build();
-                
+                .LocatedAt(_path + @"\Config_ComplexSectionConfig.json")
+                .UsingEntireFile()
+                .RefreshingWhenFileChange()
+                .ThrowsIfUnableToRefresh(true)
+                .WithActionOnChanged(HandlerAction)
+                .Build();
+```             
         
