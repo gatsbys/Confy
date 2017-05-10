@@ -82,8 +82,8 @@ If not \<cam> tag then no substitution is done.
                 .LocatedAt(_path + @"\Config_ComplexSectionConfig.json")
                 .UsingEntireFile()
                 .RefreshingWhenFileChange()
-                .ThrowsIfUnableToRefresh(true
+                .ThrowsIfUnableToRefresh(true)
                 .WithActionOnChanged(HandlerAction)
                 .Build();
-``                
+```             
         
