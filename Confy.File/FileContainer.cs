@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System.Threading;
 using Confy.File.FluentBuilder.Interfaces;
 using System.IO;
+using System.Runtime.Serialization;
 using Confy.File.Exceptions;
 using Confy.File.IO;
 
@@ -44,6 +45,9 @@ namespace Confy.File
         private bool _isConsistant;
         private bool _throwIfNotConsistant;
         private delegate void ReloaderDelegate();
+        [NonSerialized]
+        private FileSystemWatcher _watcher;
+    
 
         #endregion
 
@@ -81,6 +85,7 @@ namespace Confy.File
 
         public IConsistantOptions<T> RefreshingWhenFileChange()
         {
+            _watcher = new FileSystemWatcher();
             _refreshMode = true;
             return this;
         }
@@ -112,8 +117,17 @@ namespace Confy.File
 
         private void OnChanged(object source, FileSystemEventArgs e)
         {
-            LoadConfiguration();
-            OnConfigurationReload?.Invoke();
+            try
+            {
+                _watcher.EnableRaisingEvents = false;
+                LoadConfiguration();
+                OnConfigurationReload?.Invoke();
+            }
+            finally
+            {
+            _watcher.EnableRaisingEvents = true;
+            }
+
         }
 
         private void LoadConfiguration()
@@ -178,19 +192,17 @@ namespace Confy.File
 
         private void SetWatcher()
         {
-            FileSystemWatcher watcher = new FileSystemWatcher();
             var path = Path.GetDirectoryName(_filePath);
             var file = Path.GetFileName(_filePath);
-            watcher.Path = path;
+            _watcher.Path = path;
             /* Watch for changes in LastAccess and LastWrite times, and 
                the renaming of files or directories. */
-            watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
-               | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-            watcher.Filter = file;
+            _watcher.NotifyFilter = NotifyFilters.LastWrite;
+            _watcher.Filter = file;
             // Add event handlers.
-            watcher.Changed += new FileSystemEventHandler(OnChanged);
+            _watcher.Changed += new FileSystemEventHandler(OnChanged);
             // Begin watching.
-            watcher.EnableRaisingEvents = true;
+            _watcher.EnableRaisingEvents = true;
         }
 
         #endregion

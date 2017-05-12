@@ -75,7 +75,6 @@ namespace Confy.Test
                 .ThrowsIfUnableToRefresh(true)
                 .Build();
 
-
             TestHelpers.ModifyConfigBlockingMode();
             var test = container.Configuration.SampleSimpleObject;
 
