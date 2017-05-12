@@ -49,7 +49,7 @@ The Nuget is available at : No version published
 1. Added Camaleonic fields, that fields are fields that allow you to copy at json level the value of other tag.
 2. Added Inconsitant controls, if configuration cannot be loaded correctly when file changes, you can specify if wants to throw an exception the next time you access to the container.
 3. Added New ManualReload method, to give a way for exception control flows.
-4. Added Event Handler when the reload is done, the you can pass a method to execute when the reload finish, for example, reinstantiate a class, or send an event to other applications, etc... (No event args on this version)
+4. Added Event Handler when the reload is done, the you can pass a method to execute when the reload finish, for example, reinstantiate a class, or send an event to other applications, etc... (No event args on this version). You can pass the function to the fluent API or subscribe to the OnConfigurationReload event available on the Container.
 
 ## Installation
 
@@ -86,4 +86,27 @@ If not \<cam> tag then no substitution is done.
                 .WithActionOnChanged(HandlerAction)
                 .Build();
 ```             
-        
+Other way to subscribe to the event : 
+
+```csharp
+
+ public ConstructorOpTypeA(IFileContainer<BeatImplementationConfiguration> configContainer)
+        {
+            _configContainer = configContainer;
+            _configContainer.OnConfigurationReload += OnConfigReload;
+        }
+```
+
+And you can register the config across all the application on you Autofac register class :
+
+```csharp
+
+ builder.Register(c => FileContainerBuilder.BuildContainer<Libbeat.NET.Configuration.BeatCoreConfiguration>()
+                .LocatedAt(location)
+                .UsingEntireFile()
+                .RefreshingWhenFileChange()
+                .ThrowsIfUnableToRefresh(true)
+                .Build()).SingleInstance();
+
+
+```
