@@ -10,17 +10,27 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug-Net45|Any CPU = Debug-Net45|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Release-Net45|Any CPU = Release-Net45|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E9CD9286-DBCE-4ABE-AEB8-6BA3717BD1DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E9CD9286-DBCE-4ABE-AEB8-6BA3717BD1DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9CD9286-DBCE-4ABE-AEB8-6BA3717BD1DF}.Debug-Net45|Any CPU.ActiveCfg = Debug-Net45|Any CPU
+		{E9CD9286-DBCE-4ABE-AEB8-6BA3717BD1DF}.Debug-Net45|Any CPU.Build.0 = Debug-Net45|Any CPU
 		{E9CD9286-DBCE-4ABE-AEB8-6BA3717BD1DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9CD9286-DBCE-4ABE-AEB8-6BA3717BD1DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9CD9286-DBCE-4ABE-AEB8-6BA3717BD1DF}.Release-Net45|Any CPU.ActiveCfg = Release-Net45|Any CPU
+		{E9CD9286-DBCE-4ABE-AEB8-6BA3717BD1DF}.Release-Net45|Any CPU.Build.0 = Release-Net45|Any CPU
 		{B3B85B08-5FF9-4CBB-9D0B-02170FD5778A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B3B85B08-5FF9-4CBB-9D0B-02170FD5778A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3B85B08-5FF9-4CBB-9D0B-02170FD5778A}.Debug-Net45|Any CPU.ActiveCfg = Debug-Net45|Any CPU
+		{B3B85B08-5FF9-4CBB-9D0B-02170FD5778A}.Debug-Net45|Any CPU.Build.0 = Debug-Net45|Any CPU
 		{B3B85B08-5FF9-4CBB-9D0B-02170FD5778A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3B85B08-5FF9-4CBB-9D0B-02170FD5778A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3B85B08-5FF9-4CBB-9D0B-02170FD5778A}.Release-Net45|Any CPU.ActiveCfg = Release-Debug45|Any CPU
+		{B3B85B08-5FF9-4CBB-9D0B-02170FD5778A}.Release-Net45|Any CPU.Build.0 = Release-Debug45|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
