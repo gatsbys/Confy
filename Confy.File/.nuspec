@@ -6,14 +6,17 @@
     <title>$title$</title>
     <authors>Cristian de Murcia</authors>
     <owners>Cristian de Murcia</owners>
-    <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>
-    <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
-    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+    <licenseUrl>https://github.com/gatsbys/Confy/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/gatsbys/Confy</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <releaseNotes>Multitarget framework</releaseNotes>
     <copyright>Copyright 2017</copyright>
-    <tags>Tag1 Tag2</tags>
+    <tags>Confy Configuration AutoReload Eventing-based</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="10.0.1" />
+    </dependencies>
+
   </metadata>
   <files>
     <file src="bin\Release\Confy.File.dll" target="lib\net40" />
