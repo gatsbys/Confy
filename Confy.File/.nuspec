@@ -10,13 +10,9 @@
     <projectUrl>https://github.com/gatsbys/Confy</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Multitarget framework</releaseNotes>
+    <releaseNotes>Disposable Interface and Modified Get accessors about CA</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>Confy Configuration AutoReload Eventing-based</tags>
-    <dependencies>
-      <dependency id="Newtonsoft.Json" version="10.0.1" />
-    </dependencies>
-
   </metadata>
   <files>
     <file src="bin\Release\Confy.File.dll" target="lib\net40" />

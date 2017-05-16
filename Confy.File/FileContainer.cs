@@ -6,12 +6,13 @@ using System.IO;
 using System.Runtime.Serialization;
 using Confy.File.Exceptions;
 using Confy.File.IO;
+using Confy.Json;
 
 namespace Confy.File
 {
     public delegate void ConfigurationReloadHandler();
     [Serializable]
-    public class FileContainer<T> : IFileContainer<T>, IFilePath<T>, IParsingOptions<T>, IGetFileConfiguration<T>, IRefreshOptions<T>, IConsistantOptions<T>, IOnChangeEventHndlerOrBuild<T> where T : new()
+    public class FileContainer<T> : IFileContainer<T>, IFilePath<T>, IParsingOptions<T>, IGetFileConfiguration<T>, IRefreshOptions<T>, IConsistantOptions<T>, IOnChangeEventHndlerOrBuild<T>, IDisposable where T : new()
     {
 
         #region Public Members
@@ -21,16 +22,21 @@ namespace Confy.File
         {
             get
             {
-                while (_refreshing)
-                {
-                }
-                if (_throwIfNotConsistant && !_isConsistant) throw new InconsistantContainerException("After 10 times, unable to lock the file for load the configuration");
-                return _configuration;
+                return GetConfig();
             }
             set
             {
                 _configuration = value;
             }
+        }
+
+        private T GetConfig()
+        {
+            while (_refreshing)
+            {
+            }
+            if (_throwIfNotConsistant && !_isConsistant) throw new InconsistantContainerException("After 10 times, unable to lock the file for load the configuration");
+            return _configuration;
         }
 
         #endregion
@@ -47,7 +53,7 @@ namespace Confy.File
         private delegate void ReloaderDelegate();
         [NonSerialized]
         private FileSystemWatcher _watcher;
-    
+
 
         #endregion
 
@@ -109,7 +115,7 @@ namespace Confy.File
         public void UpdateManually()
         {
             LoadConfiguration();
-        } 
+        }
 
         #endregion
 
@@ -125,7 +131,7 @@ namespace Confy.File
             }
             finally
             {
-            _watcher.EnableRaisingEvents = true;
+                _watcher.EnableRaisingEvents = true;
             }
 
         }
@@ -137,7 +143,7 @@ namespace Confy.File
             {
                 try
                 {
-                    var intermediateStepConfig = Json.JsonLoader.ConvertFromJson<T>(_filePath);
+                    var intermediateStepConfig = JsonLoader.ConvertFromJson<T>(_filePath);
                     _configuration = intermediateStepConfig;
                     _isConsistant = true;
                 }
@@ -150,7 +156,7 @@ namespace Confy.File
             {
                 try
                 {
-                    var intermediateStepConfig = Json.JsonLoader.ConvertFromJson<T>(_filePath, _section);
+                    var intermediateStepConfig = JsonLoader.ConvertFromJson<T>(_filePath, _section);
                     _configuration = intermediateStepConfig;
                     _isConsistant = true;
                 }
@@ -205,6 +211,27 @@ namespace Confy.File
             _watcher.EnableRaisingEvents = true;
         }
 
+        #endregion
+
+        #region Disposed Resources
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // free managed resources  
+                if (_watcher != null)
+                {
+                    _watcher.Dispose();
+                    _watcher = null;
+                }
+            }
+        }
         #endregion
     }
 }
