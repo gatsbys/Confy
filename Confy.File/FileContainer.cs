@@ -173,27 +173,7 @@ namespace Confy.File
             if (_refreshMode)
             {
                 SetWatcher();
-                var reloadDelegateFBased = new ReloaderDelegate(StartLastUpdateFileBasedReloader);
-                reloadDelegateFBased.BeginInvoke(ReloaderCallback, reloadDelegateFBased);
             }
-        }
-
-        private void StartLastUpdateFileBasedReloader()
-        {
-            while (true)
-            {
-            }
-        }
-
-        private void ReloaderCallback(IAsyncResult ar)
-        {
-            try
-            {
-                var caller = (ReloaderDelegate)ar.AsyncState;
-                caller.EndInvoke(ar);
-            }
-            catch (Exception)
-            { }
         }
 
         private void SetWatcher()
